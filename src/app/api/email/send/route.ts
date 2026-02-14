@@ -26,6 +26,7 @@ export async function POST(request: Request) {
                 user: settings.smtpUser,
                 pass: settings.smtpPass,
             },
+            family: 4, // Force IPv4
         });
 
         const mailOptions = {

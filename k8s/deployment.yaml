@@ -14,9 +14,16 @@ spec:
       labels:
         app: doorboard
     spec:
+      initContainers:
+      - name: volume-permissions
+        image: busybox
+        command: ["sh", "-c", "chown -R 1001:1001 /app/data"]
+        volumeMounts:
+        - name: data-volume
+          mountPath: /app/data
       containers:
       - name: doorboard
-        image: doorboard:latest # Replace with your actual image name/registry
+        image: harbor.cu.ac.kr/doorboard/doorboard:latest # Replace with your actual image name/registry
         imagePullPolicy: IfNotPresent # Useful for local testing
         ports:
         - containerPort: 3000

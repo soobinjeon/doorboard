@@ -18,6 +18,7 @@ export async function POST(request: Request) {
                 user: smtpUser,
                 pass: smtpPass,
             },
+            family: 4, // Force IPv4
         });
 
         // Verify connection config
