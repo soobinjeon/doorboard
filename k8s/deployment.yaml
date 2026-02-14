@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: doorboard-deployment
+  labels:
+    app: doorboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: doorboard
+  template:
+    metadata:
+      labels:
+        app: doorboard
+    spec:
+      containers:
+      - name: doorboard
+        image: doorboard:latest # Replace with your actual image name/registry
+        imagePullPolicy: IfNotPresent # Useful for local testing
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NEXT_TELEMETRY_DISABLED
+          value: "1"
+        volumeMounts:
+        - name: data-volume
+          mountPath: /app/data
+      volumes:
+      - name: data-volume
+        hostPath:
+          path: /data/doorboard # Adjust this path to a valid directory on your K8s node
+          type: DirectoryOrCreate
