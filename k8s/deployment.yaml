@@ -28,6 +28,6 @@ spec:
           mountPath: /app/data
       volumes:
       - name: data-volume
-        hostPath:
-          path: /data/doorboard # Adjust this path to a valid directory on your K8s node
-          type: DirectoryOrCreate
+        persistentVolumeClaim:
+          claimName: doorboard-pvc
+
