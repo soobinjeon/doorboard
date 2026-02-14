@@ -1,0 +1,201 @@
+.container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+    transition: background 1s ease;
+}
+
+/* Gradients */
+.sunny {
+    background: linear-gradient(120deg, #fef9c3 0%, #dbeafe 100%);
+}
+
+.cloudy {
+    background: linear-gradient(120deg, #e5e7eb 0%, #9ca3af 100%);
+}
+
+.rainy {
+    background: linear-gradient(180deg, #172554 0%, #0f172a 100%);
+}
+
+/* Darker deep blue */
+.snowy {
+    background: linear-gradient(180deg, #93c5fd 0%, #1e40af 100%);
+}
+
+.windy {
+    background: linear-gradient(110deg, #d1fae5 0%, #059669 100%);
+}
+
+.wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    height: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    animation: wave 15s linear infinite;
+    transform-origin: bottom center;
+}
+
+.rainy .wave {
+    opacity: 0.1;
+}
+
+/* Animations */
+@keyframes wave {
+    0% {
+        transform: translateX(0) translateZ(0) scaleY(1);
+    }
+
+    50% {
+        transform: translateX(-25%) translateZ(0) scaleY(0.8);
+    }
+
+    100% {
+        transform: translateX(-50%) translateZ(0) scaleY(1);
+    }
+}
+
+/* RAIN */
+.rainDrop {
+    position: absolute;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.4));
+    /* Reduced opacity */
+    width: 2px;
+    height: 80px;
+    /* Slightly shorter */
+    animation: rainFall linear infinite;
+}
+
+.rainBack {
+    opacity: 0.1;
+    /* Very faint */
+    width: 1px;
+    height: 40px;
+    /* Slower fall for depth */
+}
+
+.rainFront {
+    opacity: 0.3;
+    /* Less harsh */
+    width: 2px;
+    height: 100px;
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+}
+
+@keyframes rainFall {
+    0% {
+        transform: translateY(-120px) skewX(-5deg);
+    }
+
+    100% {
+        transform: translateY(110vh) skewX(-5deg);
+    }
+}
+
+/* Splash effect at bottom (simple opacity fade for now or scale) */
+/* Ideally requires JS collision, but CSS only we stick to fall */
+
+/* SNOW */
+.snowFlake {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.9;
+    filter: blur(1px);
+    animation: snowFall 6s linear infinite;
+}
+
+@keyframes snowFall {
+    0% {
+        transform: translateY(-50px) translateX(0);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(110vh) translateX(50px);
+        opacity: 0;
+    }
+}
+
+/* WIND */
+.windParticle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.6);
+    height: 2px;
+    border-radius: 4px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+    animation: windMove 1.5s ease-in infinite;
+}
+
+@keyframes windMove {
+    0% {
+        transform: translateX(-20vw) translateY(0) scaleX(0.5);
+        opacity: 0;
+    }
+
+    5% {
+        opacity: 1;
+    }
+
+    95% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(120vw) translateY(20px) scaleX(1.5);
+        opacity: 0;
+    }
+}
+
+/* CLOUD */
+.cloud {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50px;
+    filter: blur(30px);
+    animation: cloudMove 40s linear infinite;
+}
+
+@keyframes cloudMove {
+    from {
+        transform: translateX(-150%);
+    }
+
+    to {
+        transform: translateX(150vw);
+    }
+}
+
+.particle {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: float 20s infinite linear;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(110vh) scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translateY(-10vh) scale(1);
+        opacity: 0;
+    }
+}
