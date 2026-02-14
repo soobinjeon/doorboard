@@ -12,6 +12,9 @@
     position: relative;
     width: 100%;
     max-width: 600px;
+    z-index: 50;
+    pointer-events: auto;
+    cursor: pointer;
 }
 
 .iconWrapper {
@@ -67,6 +70,11 @@
     color: #6b21a8;
 }
 
+.meeting {
+    background-color: #ecfeff;
+    color: #0e7490;
+}
+
 .textInOffice {
     color: #166534;
 }
@@ -89,6 +97,10 @@
 
 .textBusinessTrip {
     color: #6b21a8;
+}
+
+.textMeeting {
+    color: #0e7490;
 }
 
 .decorativeCircle {

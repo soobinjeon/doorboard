@@ -20,6 +20,7 @@ export const STATUS_VALUES = [
     'Off Campus',
     'Left for Day',
     'Business Trip',
+    'Meeting',
 ] as const;
 
 export type StatusValue = typeof STATUS_VALUES[number];
@@ -31,4 +32,5 @@ export const STATUS_DEFINITIONS: Record<StatusValue, { label: string }> = {
     'Off Campus': { label: '교외 (Off Campus)' },
     'Left for Day': { label: '퇴근 (Left for Day)' },
     'Business Trip': { label: '출장 (Business Trip)' },
+    'Meeting': { label: '회의 중 (Meeting)' },
 };

@@ -1,7 +1,8 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, BookOpen, School, Home, Briefcase, Coffee, MapPin } from 'lucide-react';
+import { User, BookOpen, School, Home, Briefcase, MapPin, Users } from 'lucide-react';
 import styles from './StatusDisplay.module.css';
 
 const statusConfig: Record<string, { icon: any, styleClass: string, textClass: string, text: string }> = {
@@ -11,18 +12,32 @@ const statusConfig: Record<string, { icon: any, styleClass: string, textClass: s
     'Off Campus': { icon: MapPin, styleClass: styles.offCampus, textClass: styles.textOffCampus, text: '교외 (Off Campus)' },
     'Left for Day': { icon: Home, styleClass: styles.leftForDay, textClass: styles.textLeftForDay, text: '퇴근 (Left for Day)' },
     'Business Trip': { icon: Briefcase, styleClass: styles.businessTrip, textClass: styles.textBusinessTrip, text: '출장 (Business Trip)' },
+    'Meeting': { icon: Users, styleClass: styles.meeting, textClass: styles.textMeeting, text: '회의 중 (Meeting)' },
 };
 
 export default function StatusDisplay({ status, onDoubleClick }: { status: string, onDoubleClick?: () => void }) {
     const config = statusConfig[status] || statusConfig['In Office'];
     const Icon = config.icon;
+    const [lastClick, setLastClick] = useState(0);
+
+    const handleInteraction = () => {
+        const now = Date.now();
+        if (now - lastClick < 400) { // 400ms threshold
+            console.log('[StatusDisplay] Manual double click detected!');
+            onDoubleClick?.();
+            setLastClick(0);
+        } else {
+            console.log('[StatusDisplay] Single click captured.');
+            setLastClick(now);
+        }
+    };
 
     return (
         <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className={`${styles.container} ${config.styleClass}`}
-            onDoubleClick={onDoubleClick}
+            onClick={handleInteraction}
             style={{ cursor: onDoubleClick ? 'pointer' : 'default' }}
             whileHover={onDoubleClick ? { scale: 1.02 } : {}}
             title="Double click to change status"

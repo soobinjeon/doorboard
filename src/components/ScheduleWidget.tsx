@@ -31,7 +31,7 @@ export default function ScheduleWidget() {
 
     useEffect(() => {
         fetchEvents();
-        const interval = setInterval(fetchEvents, 60000 * 5); // Refresh every 5 mins
+        const interval = setInterval(fetchEvents, 600000); // Refresh every 10 mins
         return () => clearInterval(interval);
     }, []);
 

@@ -198,3 +198,11 @@
 .textPurple {
     color: #6b21a8;
 }
+
+.bgCyan {
+    background-color: #cffafe !important;
+}
+
+.textCyan {
+    color: #0e7490;
+}

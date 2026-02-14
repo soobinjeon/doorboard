@@ -42,9 +42,11 @@ export default function Home() {
   const [mobileUrl, setMobileUrl] = useState('');
 
   const handleStatusDoubleClick = async () => {
+    console.log('Double click detected. Current status:', data.currentStatus);
     const currentIdx = STATUS_VALUES.indexOf(data.currentStatus as any);
     const nextIdx = (currentIdx + 1) % STATUS_VALUES.length;
     const nextStatus = STATUS_VALUES[nextIdx];
+    console.log('Next status:', nextStatus);
 
     try {
       // Optimistic update
@@ -64,6 +66,23 @@ export default function Home() {
       console.error('Status update error', error);
     }
   };
+
+  // Sync status with calendar every 10 minutes
+  useEffect(() => {
+    const syncStatus = async () => {
+      try {
+        await fetch('/api/status/sync', { method: 'POST' });
+      } catch (e) {
+        console.error('Sync failed', e);
+      }
+    };
+
+    // Run immediately on mount
+    syncStatus();
+
+    const interval = setInterval(syncStatus, 600000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     // Set mobile URL based on settings or default

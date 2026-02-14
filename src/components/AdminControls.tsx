@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { User, BookOpen, School, Home, Briefcase, Coffee, MapPin, Save, RefreshCw, Smile, CloudSun } from 'lucide-react';
+import { User, BookOpen, School, Home, Briefcase, MapPin, Save, RefreshCw, Smile, CloudSun, Users } from 'lucide-react';
 import styles from './AdminControls.module.css';
 import Background from './Background'; // Import Background for preview
 
@@ -12,6 +12,7 @@ const statusOptions = [
     { value: 'Off Campus', label: '교외 (Off Campus)', icon: MapPin, textClass: styles.textOrange, bgClass: styles.bgOrange },
     { value: 'Left for Day', label: '퇴근 (Left for Day)', icon: Home, textClass: styles.textGray, bgClass: styles.bgGray },
     { value: 'Business Trip', label: '출장 (Business Trip)', icon: Briefcase, textClass: styles.textPurple, bgClass: styles.bgPurple },
+    { value: 'Meeting', label: '회의 중 (Meeting)', icon: Users, textClass: styles.textCyan, bgClass: styles.bgCyan },
 ];
 
 const mascotOptions = [
