@@ -27,7 +27,7 @@ export async function POST(request: Request) {
                 pass: settings.smtpPass,
             },
             family: 4, // Force IPv4
-        });
+        } as any);
 
         const mailOptions = {
             from: `"Doorboard Student" <${settings.smtpUser}>`, // Sender address (must be authenticated user usually)

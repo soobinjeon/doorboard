@@ -19,7 +19,7 @@ export async function POST(request: Request) {
                 pass: smtpPass,
             },
             family: 4, // Force IPv4
-        });
+        } as any);
 
         // Verify connection config
         await transporter.verify();
