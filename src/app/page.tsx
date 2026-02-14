@@ -18,6 +18,8 @@ import styles from './page.module.css';
 const LAT = 35.9133;
 const LON = 128.8189;
 
+import { STATUS_VALUES } from '@/lib/constants';
+
 export default function Home() {
   const [data, setData] = useState<{
     currentStatus: string;
@@ -38,6 +40,30 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showQR, setShowQR] = useState(false);
   const [mobileUrl, setMobileUrl] = useState('');
+
+  const handleStatusDoubleClick = async () => {
+    const currentIdx = STATUS_VALUES.indexOf(data.currentStatus as any);
+    const nextIdx = (currentIdx + 1) % STATUS_VALUES.length;
+    const nextStatus = STATUS_VALUES[nextIdx];
+
+    try {
+      // Optimistic update
+      setData(prev => ({ ...prev, currentStatus: nextStatus }));
+
+      const res = await fetch('/api/status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...data, currentStatus: nextStatus }),
+      });
+
+      if (!res.ok) {
+        // Revert if failed (optional, but good practice)
+        console.error('Failed to update status');
+      }
+    } catch (error) {
+      console.error('Status update error', error);
+    }
+  };
 
   useEffect(() => {
     // Set mobile URL based on settings or default
@@ -106,7 +132,7 @@ export default function Home() {
       <WeatherWidget weather={weather} />
 
       <div className={styles.contentWrapper}>
-        <StatusDisplay status={data.currentStatus} />
+        <StatusDisplay status={data.currentStatus} onDoubleClick={handleStatusDoubleClick} />
         <ScheduleWidget />
       </div>
 

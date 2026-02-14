@@ -13,7 +13,7 @@ const statusConfig: Record<string, { icon: any, styleClass: string, textClass: s
     'Business Trip': { icon: Briefcase, styleClass: styles.businessTrip, textClass: styles.textBusinessTrip, text: '출장 (Business Trip)' },
 };
 
-export default function StatusDisplay({ status }: { status: string }) {
+export default function StatusDisplay({ status, onDoubleClick }: { status: string, onDoubleClick?: () => void }) {
     const config = statusConfig[status] || statusConfig['In Office'];
     const Icon = config.icon;
 
@@ -22,6 +22,10 @@ export default function StatusDisplay({ status }: { status: string }) {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className={`${styles.container} ${config.styleClass}`}
+            onDoubleClick={onDoubleClick}
+            style={{ cursor: onDoubleClick ? 'pointer' : 'default' }}
+            whileHover={onDoubleClick ? { scale: 1.02 } : {}}
+            title="Double click to change status"
         >
             <motion.div
                 animate={{

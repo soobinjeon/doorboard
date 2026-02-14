@@ -26,11 +26,15 @@
 }
 
 .statusText {
-    font-size: 3.75rem;
+    font-size: 3rem;
     font-weight: 700;
     letter-spacing: -0.025em;
     text-align: center;
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
 }
 
 .inOffice {
