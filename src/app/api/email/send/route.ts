@@ -1,6 +1,14 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import { getStatus } from '@/lib/store';
+import dns from 'node:dns';
+
+// Force IPv4 lookup ordering
+try {
+    dns.setDefaultResultOrder('ipv4first');
+} catch (e) {
+    // Ignore if not supported
+}
 
 export async function POST(request: Request) {
     try {
