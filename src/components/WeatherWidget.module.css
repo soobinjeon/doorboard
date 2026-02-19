@@ -2,23 +2,23 @@
     position: absolute;
     top: 2rem;
     left: 2rem;
-    background-color: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(8px);
-    padding: 1rem 1.5rem;
-    border-radius: 1rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    /* Removed background and borders for cleaner look */
+    padding: 0;
     display: flex;
     align-items: center;
     gap: 1rem;
-    color: #1f2937;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #ffffff;
     z-index: 20;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    font-family: 'Inter', system-ui, sans-serif;
+    pointer-events: none;
 }
 
 .icon {
-    width: 3rem;
-    height: 3rem;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    width: 4rem;
+    /* Slightly larger */
+    height: 4rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .info {
@@ -27,13 +27,30 @@
 }
 
 .temp {
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 700;
     line-height: 1;
 }
 
 .desc {
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 500;
-    opacity: 0.8;
+    opacity: 0.9;
+    text-transform: capitalize;
+}
+
+@media (max-width: 768px) {
+    .weatherContainer {
+        top: 1rem;
+        left: 1rem;
+    }
+
+    .temp {
+        font-size: 1.5rem;
+    }
+
+    .icon {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
 }

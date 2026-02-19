@@ -6,12 +6,15 @@ import styles from './ClockWidget.module.css';
 
 export default function ClockWidget() {
     const [time, setTime] = useState(new Date());
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        // Update every second
+        setMounted(true);
         const timer = setInterval(() => setTime(new Date()), 1000);
         return () => clearInterval(timer);
     }, []);
+
+    if (!mounted) return null;
 
     const hours = time.getHours().toString().padStart(2, '0');
     const minutes = time.getMinutes().toString().padStart(2, '0');
@@ -25,42 +28,51 @@ export default function ClockWidget() {
     });
 
     return (
-        <motion.div
-            className={styles.clockContainer}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, type: 'spring' }}
-        >
+        <div className={styles.clockContainer}>
             <div className={styles.timeWrapper}>
-                <div className={styles.time}>
-                    <AnimatedDigits value={hours} />
+                <div className={`${styles.time} ${styles.large}`}>
+                    <DigitGroup value={hours} />
                     <span className={styles.colon}>:</span>
-                    <AnimatedDigits value={minutes} />
-                </div>
-                <div className={styles.seconds}>
-                    <AnimatedDigits value={seconds} />
+                    <DigitGroup value={minutes} />
+                    {/* Optional: Seconds can be smaller or removed if we want super simple. 
+                        User asked for "Simpler". Let's keep seconds but maybe smaller? 
+                        The reference "Changelog" usually has seconds. 
+                        I'll stick to HH:MM for big impact or HH:MM:SS depending on space.
+                        Let's keep it consistent size for now.
+                    */}
+                    <span className={styles.colon}>:</span>
+                    <DigitGroup value={seconds} />
                 </div>
             </div>
             <div className={styles.date}>{dateString}</div>
-        </motion.div>
+        </div>
     );
 }
 
-function AnimatedDigits({ value }: { value: string }) {
-    // Split into individual characters to animate separately if needed, 
-    // but animating the whole block is smoother for now
+function DigitGroup({ value }: { value: string }) {
     return (
-        <div style={{ position: 'relative', display: 'inline-flex' }}>
+        <div style={{ display: 'flex' }}>
+            {value.split('').map((digit, i) => (
+                <RollingDigit key={i} digit={digit} />
+            ))}
+        </div>
+    );
+}
+
+function RollingDigit({ digit }: { digit: string }) {
+    return (
+        <div className={styles.digitColumn}>
             <AnimatePresence mode='popLayout'>
-                <motion.span
-                    key={value}
-                    initial={{ y: 20, opacity: 0, filter: 'blur(5px)' }}
-                    animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
-                    exit={{ y: -20, opacity: 0, filter: 'blur(5px)' }}
-                    transition={{ duration: 0.3, ease: 'easeOut' }}
+                <motion.div
+                    key={digit}
+                    className={styles.digit}
+                    initial={{ y: '100%' }}
+                    animate={{ y: '0%' }}
+                    exit={{ y: '-100%' }}
+                    transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
                 >
-                    {value}
-                </motion.span>
+                    {digit}
+                </motion.div>
             </AnimatePresence>
         </div>
     );
