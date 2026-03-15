@@ -30,10 +30,12 @@ export async function POST() {
 
         if (!currentEvent) {
             console.log('[Sync API] No active event found.');
-            // Optionally: Should we revert to 'In Office' if no event? 
-            // Logic says: "If event exists, changeto X. If not, do nothing (keep manual status)".
-            // The user requirement implies auto-change TO status, but maybe not FROM status?
-            // "일정확인 후 상태가 자동으로 변경되도록 했으면 함"
+            // Revert to default 'In Office' if current status was auto-set
+            if (data.currentStatus !== 'In Office') {
+                console.log(`[Sync API] Reverting status: ${data.currentStatus} -> In Office`);
+                await updateStatus({ currentStatus: 'In Office' });
+                return NextResponse.json({ success: true, updated: true, newStatus: 'In Office' });
+            }
             return NextResponse.json({ success: true, updated: false, message: 'No active event' });
         }
 

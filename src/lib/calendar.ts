@@ -29,30 +29,68 @@ export async function fetchCalendarEvents(calendarUrl: string): Promise<Calendar
         const endRange = new Date(today);
         endRange.setDate(endRange.getDate() + 30); // Look ahead 30 days
 
+        const todayICAL = ICAL.Time.fromJSDate(today, false);
+        const endRangeICAL = ICAL.Time.fromJSDate(endRange, false);
+
         const events: CalendarEvent[] = [];
 
-        vevents.forEach((vevent) => {
+        vevents.forEach((vevent: any) => {
             const event = new ICAL.Event(vevent);
-            const startDate = event.startDate.toJSDate();
-            const endDate = event.endDate.toJSDate();
 
-            // Simple filtering for active/upcoming
-            // We include events that are active NOW, even if started before today
-            // But for performance loop, checking today-ish is fine.
-            // Actually for "Current Status", we need to catch events that started yesterday but are still going (rare for class, maybe trip)
+            // Calculate the duration of the event to apply to each occurrence
+            const duration = event.duration;
 
-            // Let's broaden start range slightly or just check if it overlaps 'now' if we were doing strict checking
-            // But for general list, the existing logic is okay.
+            if (event.isRecurring()) {
+                // Expand recurring events within the range
+                const iterator = event.iterator();
+                let next: any;
 
-            if (endDate >= today && startDate < endRange) {
-                events.push({
-                    summary: event.summary || 'No Title',
-                    start: startDate,
-                    end: endDate,
-                    location: event.location || '',
-                    description: event.description || '',
-                    allDay: event.startDate.isDate
-                });
+                while ((next = iterator.next())) {
+                    const occurrenceStart = next.toJSDate();
+
+                    // Stop if we've gone past the end of our range
+                    if (occurrenceStart > endRange) break;
+
+                    // Calculate occurrence end by adding the original duration
+                    const occurrenceEndICAL = next.clone();
+                    occurrenceEndICAL.addDuration(duration);
+                    const occurrenceEnd = occurrenceEndICAL.toJSDate();
+
+                    // Skip occurrences that have already ended before today
+                    if (occurrenceEnd < today) continue;
+
+                    // Check for EXDATE (exception dates where the event was cancelled)
+                    try {
+                        const details = event.getOccurrenceDetails(next);
+                        if (!details || !details.item) continue;
+                    } catch (e) {
+                        // If getOccurrenceDetails fails, still include the occurrence
+                    }
+
+                    events.push({
+                        summary: event.summary || 'No Title',
+                        start: occurrenceStart,
+                        end: occurrenceEnd,
+                        location: event.location || '',
+                        description: event.description || '',
+                        allDay: event.startDate.isDate
+                    });
+                }
+            } else {
+                // Non-recurring event: use original logic
+                const startDate = event.startDate.toJSDate();
+                const endDate = event.endDate.toJSDate();
+
+                if (endDate >= today && startDate < endRange) {
+                    events.push({
+                        summary: event.summary || 'No Title',
+                        start: startDate,
+                        end: endDate,
+                        location: event.location || '',
+                        description: event.description || '',
+                        allDay: event.startDate.isDate
+                    });
+                }
             }
         });
 
