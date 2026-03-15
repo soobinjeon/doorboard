@@ -1,10 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Send, User, MessageSquare } from 'lucide-react';
+import { motion } from 'framer-motion';
 import StatusDisplay from '@/components/StatusDisplay';
-import BookingModal from '@/components/BookingModal';
 import MessageBoard from '@/components/MessageBoard';
 import Mascot from '@/components/Mascot';
 import ClockWidget from '@/components/ClockWidget';
@@ -37,9 +35,6 @@ export default function Home() {
   });
   const [weather, setWeather] = useState<{ temp: number, code: number } | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showQR, setShowQR] = useState(false);
-  const [mobileUrl, setMobileUrl] = useState('');
 
   const handleStatusDoubleClick = async () => {
     console.log('Double click detected. Current status:', data.currentStatus);
@@ -84,13 +79,7 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    // Set mobile URL based on settings or default
-    const fullUrl = data.emailSettings?.baseUrl
-      ? `${data.emailSettings.baseUrl}/m`
-      : typeof window !== 'undefined' ? `${window.location.origin}/m` : '';
-    setMobileUrl(fullUrl);
-  }, [data.emailSettings]);
+  const GOOGLE_FORM_URL = 'https://forms.gle/oC7zXDpYVcJL4mVy7';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -155,55 +144,20 @@ export default function Home() {
         <ScheduleWidget />
       </div>
 
-      <MessageBoard message={data.professorMessage} />
-
-      {/* QR Code Modal */}
-      <AnimatePresence>
-        {showQR && (
-          <motion.div
-            className={styles.modalOverlay}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowQR(false)}
-          >
-            <motion.div
-              className={styles.qrCard}
-              initial={{ scale: 0.8, y: 50 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.8, y: 50 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h2 className={styles.qrTitle}>Mobile Messenger</h2>
-              <p className={styles.qrDesc}>Scan to send a message to the professor</p>
-
-              <div className={styles.qrWrapper}>
-                <QRCodeSVG value={mobileUrl} size={200} level="H" includeMargin={true} />
-              </div>
-
-              <p className={styles.qrUrl}>{mobileUrl}</p>
-
-              <button className={styles.closeButton} onClick={() => setShowQR(false)}>
-                Close
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <div className={styles.bookingArea}>
-        <motion.button
-          className={styles.messageButton}
-          onClick={() => setShowQR(true)}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+      <div className={styles.noticeRow}>
+        <MessageBoard message={data.professorMessage} />
+        <motion.div
+          className={styles.qrSection}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.3 }}
         >
-          <Send size={24} />
-          <span>교수님과 약속하기 / 메시지 남기기</span>
-          <div className={styles.shine} />
-        </motion.button>
+          <div className={styles.qrBox}>
+            <QRCodeSVG value={GOOGLE_FORM_URL} size={140} level="H" includeMargin={true} bgColor="transparent" fgColor="#1f2937" />
+          </div>
+          <p className={styles.qrLabel}>교수님께 메시지 남기기</p>
+        </motion.div>
       </div>
-      <BookingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
       <Mascot type={data.mascot} />
     </main>
