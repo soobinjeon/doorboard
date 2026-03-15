@@ -17,7 +17,7 @@
 .contentWrapper {
   display: grid;
   grid-template-columns: 1fr calc(50% + 30px);
-  gap: 4rem;
+  gap: 2rem;
   width: 100%;
   max-width: 1200px;
   z-index: 10;
